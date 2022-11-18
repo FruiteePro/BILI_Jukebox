@@ -11,9 +11,6 @@ import ffmpeg_cmd
 room = live.LiveDanmaku(gl.room_id)
 
 
-
-
-
 #主播放循环
 async def music_player():
     while True:
@@ -26,7 +23,7 @@ async def music_player():
 
             if code:
                 utils.delete_music(selected_music)
-            await asyncio.sleep(1)
+            await asyncio.sleep(10)
         except Exception as e:
             print(e)
 
@@ -53,18 +50,20 @@ async def call_list(event):
         return 0
     print(msg)
     await add_music(music_name)
-    ret = os.fork()
-    if ret == 0:
-        write_fifo()
-        return
-    else:
-        return
+    #######################################BUG
+    # ret = os.fork()
+    # if ret == 0:
+    #     write_fifo()
+    #     return
+    # else:
+    #     return
+    asyncio.gather(write_fifo())
     
 
 
 
 #video 写入 fifo
-def write_fifo():
+async def write_fifo():
     if gl.called_list:
         video_name = gl.called_list[0]
         fifo_path = './fifo/' + gl.pipe_name
@@ -108,7 +107,8 @@ def update_call_list():
     if len(buffer) == 0:
         return -1
     else:
-        gl.called_list.append(buffer.decode('utf-8'))
+        muisc_names = utils.str_2_name(buffer)
+        gl.called_list.extend(muisc_names)
         return 1
             
 
@@ -128,8 +128,9 @@ def setup():
 
 
 if __name__ == "__main__":
-    name = "七里香"
+    name = "push"
 
     #asyncio.run(setup())
+    utils.creat_FIFO(name)
     setup()
     #ffmpeg_cmd.start_live

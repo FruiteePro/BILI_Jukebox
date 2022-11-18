@@ -121,7 +121,7 @@ def music_search(song_name):
             if res_code > 0:
                 break
             item = json.dumps(item)
-            print(str(i) + "：" + json.loads(str(item))['name'])
+            #print(str(i) + "：" + json.loads(str(item))['name'])
             d = {"ids": "[" + str(json.loads(str(item))['id']) + "]", "level": "standard", "encodeType": "",
                  "csrf_token": ""}
             d = json.dumps(d)
@@ -130,15 +130,17 @@ def music_search(song_name):
             if len(song_info) > 0:
                 song_info = json.loads(song_info)
                 song_url = json.dumps(song_info['data'][0]['url'], ensure_ascii=False)
-                print(song_url)
+                #print(song_url)
                 res_song_url = song_url
                 res_code = 1
             else:
                 res_code = -2
-                print("该首歌曲解析失败，可能是因为歌曲格式问题")
+                #print("该首歌曲解析失败，可能是因为歌曲格式问题")
+                print("ERROR! Music analysis fault. Maybe the format of music is wrong.")
     else:
         res_code = -1
-        print("很抱歉，未能搜索到相关歌曲信息")
+        #print("很抱歉，未能搜索到相关歌曲信息")
+        print("Sorry, can not find infomation of this song.")
 
     return res_code, res_song_url
 
@@ -148,8 +150,9 @@ def music_download(song_name):
         code, song_url = music_search(song_name)
         if code == 1:
             song_url = song_url.strip("\"")
-            print(song_url)
+            #print(song_url)
             utils.download(song_url, song_name)
+            print("download " + song_name + " success!")
             return code, song_name
         else:
             return -1, song_name
