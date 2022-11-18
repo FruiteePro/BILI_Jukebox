@@ -1,5 +1,6 @@
 import asyncio
 import os
+import sys
 import random
 import time
 from bilibili_api import live
@@ -13,6 +14,7 @@ import ffmpeg_cmd
 room = live.LiveDanmaku(room_display_id=gl.room_id)
 lock = Lock()
 
+
 #主播放循环
 async def music_player():
     while True:
@@ -25,20 +27,31 @@ async def music_player():
             time_point2 = time.time()
             real_duration = time_point2 - time_point1
 
+            count = 0
             while real_duration < 0.9 * float(duration):
-                time_point1 = time.time()
-                await ffmpeg_cmd.push_stream(selected_music, real_duration)
-                time_point2 = time.time()
-                real_duration = real_duration + time_point2 - time_point1
+                try:
+                    time_point1 = time.time()
+                    await ffmpeg_cmd.push_stream(selected_music, real_duration)
+                    time_point2 = time.time()
+                    real_duration = real_duration + time_point2 - time_point1
+                    count = count + 1
+                    if count == 6:
+                        break
+                except:
+                    break
                 
+            if count == 6:
+                await asyncio.sleep(1)
             print("music real play time: " + str(real_duration))
-            with lock:
-                gl.called_list.pop(0)
+            if code:
+                with lock:
+                    gl.called_list.pop(0)
 
             if code:
                 utils.delete_music(selected_music)
         except Exception as e:
             print(e)
+            break
 
 #开播
 async def begin_live(music_name):
@@ -87,7 +100,6 @@ async def tasks():
 def run_bili_cycle():
     asyncio.run(tasks())
     print("nice")
-
 
 def setup():
     t1 = Thread(target=run_bili_cycle, args=())
