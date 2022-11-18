@@ -30,7 +30,7 @@ async def music_player():
             real_duration = time_point2 - time_point1
             print("music real play time: " + real_duration)
             print
-            #await asyncio.sleep(10)
+            await asyncio.sleep(1)
         except Exception as e:
             print(e)
 
