@@ -1,6 +1,7 @@
 import asyncio
 import os
 import random
+import time
 from bilibili_api import live
 
 from wordpicker import analysis_danmuku
@@ -17,13 +18,19 @@ async def music_player():
         try:
             code, selected_music = choose_music()
             #gl.playing = selected_music
-            print("play " + selected_music)
+            duration = ffmpeg_cmd.get_vidoe_info(selected_music)
+            time_point1 = time.time()
+            print("playing " + selected_music + "  music_duration: " + duration + " s")
             await begin_live(selected_music)
             #await write_fifo(selected_music)
 
             if code:
                 utils.delete_music(selected_music)
-            await asyncio.sleep(10)
+            time_point2 = time.time()
+            real_duration = time_point2 - time_point1
+            print("music real play time: " + real_duration)
+            print
+            #await asyncio.sleep(10)
         except Exception as e:
             print(e)
 
