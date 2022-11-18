@@ -61,14 +61,15 @@ async def get_vidoe_info(name):
             ]
         )
         print (ff.cmd)
-        stdout, stderr = await ff.run_async(stdout=subprocess.PIPE)
+        stdout, stderr = ff.run(stdout=subprocess.PIPE)
         info = json.loads(stdout.decode('utf-8'))
         duration = info['format']['duration']
         #print(info)
-        if isinstance(duration, int):
-            return 1, duration
-        else:
-            return -1, "error"
+        return 1, duration
+        # if isinstance(duration, ):
+        #     return 1, duration
+        # else:
+        #     return -1, "error"
 
     except Exception as e:
         return -1, e

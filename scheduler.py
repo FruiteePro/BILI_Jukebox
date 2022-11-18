@@ -18,9 +18,9 @@ async def music_player():
         try:
             code, selected_music = choose_music()
             #gl.playing = selected_music
-            duration = ffmpeg_cmd.get_vidoe_info(selected_music)
+            _, duration = await ffmpeg_cmd.get_vidoe_info(selected_music)
             time_point1 = time.time()
-            print("playing " + selected_music + "  music_duration: " + duration + " s")
+            print("playing " + selected_music + " music_duration: " + str(duration) + " second")
             await begin_live(selected_music)
             #await write_fifo(selected_music)
 
@@ -28,9 +28,8 @@ async def music_player():
                 utils.delete_music(selected_music)
             time_point2 = time.time()
             real_duration = time_point2 - time_point1
-            print("music real play time: " + real_duration)
-            print
-            await asyncio.sleep(1)
+            print("music real play time: " + str(real_duration))
+            #await asyncio.sleep(10)
         except Exception as e:
             print(e)
 
