@@ -48,7 +48,7 @@ async def make_video(name):
 #获取视频信息
 async def get_vidoe_info(name):
     try:
-        video_name = "./video/" + name + ".flv"
+        video_name = "./music/" + name + ".mp3"
         ff = FFprobe (
             inputs = {
                 video_name : None
