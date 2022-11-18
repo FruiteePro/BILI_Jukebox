@@ -3,7 +3,6 @@ from ffmpy3 import FFmpeg
 from ffmpy3 import FFprobe
 import subprocess
 import json
-import time
 import os
 
 import globaler as gl
@@ -79,34 +78,60 @@ async def get_vidoe_info(name):
 #开始推流
 #这里使用一个命名管道来进行推流
 async def start_live(name):
-    pipi_path = './fifo/' + gl.pipe_name
-    video_name = './video/' + name + '.flv'
-    live_addr = "\"" + gl.rtmp_addr + gl.live_code + "\""
-    if not os.path.exists(pipi_path):
-        print('ERROR! No push FIFO!')
-    ff = FFmpeg (
-        global_options = [
-            '-v', 'quiet'
-        ],
-        inputs = {
-            video_name : ['-re']
-        },
-        outputs = {
-            #"rtmp://rtmp地址/你的直播码" : [
-            "" : [
-                '-c:v', 'copy',
-                '-c:a', 'aac',
-                '-b:a', '192k',
-                '-f', 'flv'
-            ]
-        }   
-    )
-    #print(ff.cmd)
-    #ff.run()
-    print(ff.cmd + ' ' + live_addr)
-    #os.system(ff.cmd + " " + live_addr + " &")
-    os.system(ff.cmd + " " + live_addr)
+    try:
+        video_name = './video/' + name + '.flv'
+        live_addr = "\"" + gl.rtmp_addr + gl.live_code + "\""
+        ff = FFmpeg (
+            global_options = [
+                '-v', 'quiet'
+            ],
+            inputs = {
+                video_name : ['-re']
+            },
+            outputs = {
+                #"rtmp://rtmp地址/你的直播码" : [
+                "" : [
+                    '-c:v', 'copy',
+                    '-c:a', 'aac',
+                    '-b:a', '192k',
+                    '-f', 'flv'
+                ]
+            }   
+        )
+        print(ff.cmd + ' ' + live_addr)
+        os.system(ff.cmd + " " + live_addr)
+    except Exception as e:
+        print(e)
 
+
+#断点推流
+async def push_stream(name, time):
+    try:
+        time = int(time)
+        video_name = './video/' + name + '.flv'
+        live_addr = "\"" + gl.rtmp_addr + gl.live_code + "\""
+        ff = FFmpeg (
+            global_options = [
+                '-v', 'quiet'
+            ],
+            inputs = {
+                video_name : ['-re']
+            },
+            outputs = {
+                #"rtmp://rtmp地址/你的直播码" : [
+                "" : [
+                    '-c:v', 'copy',
+                    '-c:a', 'aac',
+                    '-b:a', '192k',
+                    '-ss', str(time),
+                    '-f', 'flv'
+                ]
+            }   
+        )
+        print(ff.cmd + ' ' + live_addr)
+        os.system(ff.cmd + " " + live_addr)
+    except Exception as e:
+        print(e)
 
 
 
