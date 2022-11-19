@@ -39,5 +39,3 @@ if __name__ == "__main__":
     print("start")
     #asyncio.run(room.connect())
 
-#ffprobe  -print_format json -show_streams -show_format -i ./video/庐州月.flv
-
