@@ -6,7 +6,6 @@ import json
 import os
 
 import globaler as gl
-import utils
 
 #音频和图片合成视频
 async def make_video(name):
@@ -48,7 +47,7 @@ async def make_video(name):
 #获取视频信息
 async def get_vidoe_info(name):
     try:
-        video_name = "./music/" + name + ".mp3"
+        video_name = "./video/" + name + ".flv"
         ff = FFprobe (
             inputs = {
                 video_name : None
@@ -63,14 +62,12 @@ async def get_vidoe_info(name):
         stdout, stderr = ff.run(stdout=subprocess.PIPE)
         info = json.loads(stdout.decode('utf-8'))
         duration = info['format']['duration']
-        #print(info)
+
         return 1, duration
-        # if isinstance(duration, ):
-        #     return 1, duration
-        # else:
-        #     return -1, "error"
+
 
     except Exception as e:
+        print(e)
         return -1, e
 
     
@@ -115,15 +112,16 @@ async def push_stream(name, time):
                 '-v', 'quiet'
             ],
             inputs = {
-                video_name : ['-re']
+                video_name : [
+                    '-ss', str(time),
+                    '-re'
+                ]
             },
             outputs = {
-                #"rtmp://rtmp地址/你的直播码" : [
                 "" : [
                     '-c:v', 'copy',
                     '-c:a', 'aac',
                     '-b:a', '192k',
-                    '-ss', str(time),
                     '-f', 'flv'
                 ]
             }   
@@ -136,13 +134,6 @@ async def push_stream(name, time):
 
 
 if __name__ == "__main__":
-    name = "七里香"
-    fifo_name = 'push'
-    #time1 = time.time()
-    #make_video(name)
-    #time2 = time.time()
-    #print(time2 - time1)
-    #get_vidoe_info(name)
     asyncio.run (start_live())
 
 

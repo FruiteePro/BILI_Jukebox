@@ -1,10 +1,8 @@
-defult_list = ['七里香', '素颜', '幻听', '庐州月', '如果当时']
+defult_list = []
 called_list = []
-#playing = "NULL"
+download_list = []
 
-room_id = 21282223
+room_id = 0
 rtmp_addr = "rtmp://live-push.bilivideo.com/live-bvc/"
 live_code = ""
 
-
-pipe_name = 'push'

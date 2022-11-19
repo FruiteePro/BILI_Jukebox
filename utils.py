@@ -1,4 +1,3 @@
-import imp
 import os
 import urllib.request
 import re
@@ -18,7 +17,8 @@ def get_danmuku_result(str):
     if ret:
         name = re.findall(r"^点歌-(.+)", str)
         print(name)
-        return 1, name[0]
+        format_name = name[0].replace(" ", "_")
+        return 1, format_name
     else:
         return -1, "NULL"
 

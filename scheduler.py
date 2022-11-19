@@ -1,12 +1,10 @@
 import asyncio
-import os
-import sys
 import random
 import time
 from bilibili_api import live
 from threading import Thread, Lock
 
-from wordpicker import analysis_danmuku
+from wordpicker import analysis_danmuku, music_downloader
 import utils
 import globaler as gl
 import ffmpeg_cmd
@@ -34,6 +32,7 @@ async def music_player():
                     await ffmpeg_cmd.push_stream(selected_music, real_duration)
                     time_point2 = time.time()
                     real_duration = real_duration + time_point2 - time_point1
+                    #await asyncio.sleep(1)
                     count = count + 1
                     if count == 6:
                         break
@@ -68,16 +67,32 @@ async def call_list(event):
     code, music_name = await analysis_danmuku(event)
     if code == -1:
         return 0
-    code, msg = await ffmpeg_cmd.make_video(music_name)
-    if code == -1:
-        return 0
-    print(msg)
-    await add_music(music_name)
+    gl.download_list.append(music_name)
+    task = video_composer(music_name)
+    asyncio.gather(task)
+
 
 #添加一首 music
 async def add_music(music_name):
     with lock:
         gl.called_list.append(music_name)
+
+
+#音乐下载及封装
+async def video_composer(music_name):
+    download_code = await music_downloader(music_name)
+    if download_code == -1:
+        return -1
+    video_compose_code, msg = await ffmpeg_cmd.make_video(music_name)
+    if video_compose_code == -1:
+        print("video composer error : " + msg)
+        return -1
+    print("video composer success")
+    while gl.download_list[0] != music_name:
+        await asyncio.sleep(10)
+    await add_music(music_name)
+    gl.download_list.pop(0)
+    
 
 
 #选择下一个音乐
@@ -97,12 +112,12 @@ async def tasks():
     room_connect = room.connect()
     await asyncio.gather(room_connect)
 
-def run_bili_cycle():
+def run_bili_loop():
     asyncio.run(tasks())
     print("nice")
 
 def setup():
-    t1 = Thread(target=run_bili_cycle, args=())
+    t1 = Thread(target=run_bili_loop, args=())
     t1.start()
     asyncio.run(music_player())
     t1.join()

@@ -1,8 +1,3 @@
-#!D:/Code/python
-# -*- coding: utf-8 -*-
-# @Time : 2020/8/22 12:32
-# @Author : Am0xil
-# @Description : 网易云音乐模拟
 import base64
 import binascii
 import json
@@ -10,7 +5,6 @@ import random
 import string
 from urllib import parse
 
-import soupsieve
 import utils
 
 import requests
@@ -121,7 +115,6 @@ def music_search(song_name):
             if res_code > 0:
                 break
             item = json.dumps(item)
-            #print(str(i) + "：" + json.loads(str(item))['name'])
             d = {"ids": "[" + str(json.loads(str(item))['id']) + "]", "level": "standard", "encodeType": "",
                  "csrf_token": ""}
             d = json.dumps(d)
@@ -130,16 +123,13 @@ def music_search(song_name):
             if len(song_info) > 0:
                 song_info = json.loads(song_info)
                 song_url = json.dumps(song_info['data'][0]['url'], ensure_ascii=False)
-                #print(song_url)
                 res_song_url = song_url
                 res_code = 1
             else:
                 res_code = -2
-                #print("该首歌曲解析失败，可能是因为歌曲格式问题")
                 print("ERROR! Music analysis fault. Maybe the format of music is wrong.")
     else:
         res_code = -1
-        #print("很抱歉，未能搜索到相关歌曲信息")
         print("Sorry, can not find infomation of this song.")
 
     return res_code, res_song_url
@@ -150,7 +140,6 @@ def music_download(song_name):
         code, song_url = music_search(song_name)
         if code == 1:
             song_url = song_url.strip("\"")
-            #print(song_url)
             utils.download(song_url, song_name)
             print("download " + song_name + " success!")
             return code, song_name
@@ -165,33 +154,3 @@ def music_download(song_name):
 if __name__ == '__main__':
     song_name = input('请输入歌曲名称：')
     music_download(song_name)
-    #music_search(song_name)
-
-
-# if __name__ == '__main__':
-#     song_name = input('请输入歌曲名称，按回车键搜索：')
-#     d = {"hlpretag": "<span class=\"s-fc7\">", "hlposttag": "</span>", "s": song_name, "type": "1", "offset": "0",
-#          "total": "true", "limit": "30", "csrf_token": ""}
-#     d = json.dumps(d)
-#     random_param = get_random()
-#     param = get_final_param(d, random_param)
-#     song_list = get_music_list(param['params'], param['encSecKey'])
-#     print('搜索结果如下：')
-#     if len(song_list) > 0:
-#         song_list = json.loads(song_list)['result']['songs']
-#         for i, item in enumerate(song_list):
-#             item = json.dumps(item)
-#             print(str(i) + "：" + json.loads(str(item))['name'])
-#             d = {"ids": "[" + str(json.loads(str(item))['id']) + "]", "level": "standard", "encodeType": "",
-#                  "csrf_token": ""}
-#             d = json.dumps(d)
-#             param = get_final_param(d, random_param)
-#             song_info = get_reply(param['params'], param['encSecKey'])
-#             if len(song_info) > 0:
-#                 song_info = json.loads(song_info)
-#                 song_url = json.dumps(song_info['data'][0]['url'], ensure_ascii=False)
-#                 print(song_url)
-#             else:
-#                 print("该首歌曲解析失败，可能是因为歌曲格式问题")
-#     else:
-#         print("很抱歉，未能搜索到相关歌曲信息")
