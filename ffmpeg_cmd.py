@@ -40,6 +40,7 @@ async def make_video(name):
         )
         print(ff.cmd)
         await ff.run_async()
+        await ff.wait()
         return 1, "success"
     except Exception as e:
         return -1, e
@@ -65,6 +66,32 @@ async def get_vidoe_info(name):
 
         return 1, duration
 
+
+    except Exception as e:
+        print(e)
+        return -1, e
+
+
+#获取音乐信息
+async def get_music_info(name):
+    try:
+        video_name = "./music/" + name + ".mp3"
+        ff = FFprobe (
+            inputs = {
+                video_name : None
+            },
+            global_options = [
+                '-v', 'quiet',
+                '-print_format', 'json',
+                '-show_streams', '-show_format'
+            ]
+        )
+        print (ff.cmd)
+        stdout, stderr = ff.run(stdout=subprocess.PIPE)
+        info = json.loads(stdout.decode('utf-8'))
+        duration = info['format']['duration']
+
+        return 1, duration
 
     except Exception as e:
         print(e)

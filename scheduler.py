@@ -1,6 +1,7 @@
 import asyncio
 import random
 import time
+import os
 from bilibili_api import live
 from threading import Thread, Lock
 
@@ -21,6 +22,9 @@ async def music_player():
             _, duration = await ffmpeg_cmd.get_vidoe_info(selected_music)
             time_point1 = time.time()
             print("playing " + selected_music + "  music_duration: " + str(duration) + " second")
+            if not os.path.exists('./video/' + selected_music + '.flv'):
+                print("No music:" + selected_music)
+                continue
             await begin_live(selected_music)
             time_point2 = time.time()
             real_duration = time_point2 - time_point1

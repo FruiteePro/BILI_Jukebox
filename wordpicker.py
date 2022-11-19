@@ -20,12 +20,6 @@ async def analysis_danmuku(event):
     if code == -1 :
         return -1, 'error'
     else : 
-        # ifsucc = await music_downloader(name)
-        # if ifsucc == -1 :
-        #     return -1, 'error'
-        # else :
-        #     print("呦西")
-        #     #放入播放队列
         return 1, name
 
 
