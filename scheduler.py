@@ -29,22 +29,15 @@ async def music_player():
             time_point2 = time.time()
             real_duration = time_point2 - time_point1
 
-            count = 0
             while real_duration < 0.9 * float(duration):
                 try:
                     time_point1 = time.time()
                     await ffmpeg_cmd.push_stream(selected_music, real_duration)
                     time_point2 = time.time()
                     real_duration = real_duration + time_point2 - time_point1
-                    #await asyncio.sleep(1)
-                    count = count + 1
-                    if count == 6:
-                        break
                 except:
                     break
                 
-            if count == 6:
-                await asyncio.sleep(1)
             print("music real play time: " + str(real_duration))
             if code:
                 with lock:

@@ -1,6 +1,5 @@
 import asyncio
-from ffmpy3 import FFmpeg
-from ffmpy3 import FFprobe
+from ffmpy3 import FFmpeg, FFprobe
 import subprocess
 import json
 import os
@@ -39,7 +38,7 @@ async def make_video(name):
             }
         )
         print(ff.cmd)
-        await ff.run_async()
+        ff.run_async()
         await ff.wait()
         return 1, "success"
     except Exception as e:
@@ -104,7 +103,7 @@ async def get_music_info(name):
 async def start_live(name):
     try:
         video_name = './video/' + name + '.flv'
-        live_addr = "\"" + gl.rtmp_addr + gl.live_code + "\""
+        live_addr = gl.rtmp_addr + gl.live_code
         ff = FFmpeg (
             global_options = [
                 '-v', 'quiet'
@@ -114,7 +113,7 @@ async def start_live(name):
             },
             outputs = {
                 #"rtmp://rtmp地址/你的直播码" : [
-                "" : [
+                live_addr : [
                     '-c:v', 'copy',
                     '-c:a', 'aac',
                     '-b:a', '192k',
@@ -122,8 +121,9 @@ async def start_live(name):
                 ]
             }   
         )
-        print(ff.cmd + ' ' + live_addr)
-        os.system(ff.cmd + " " + live_addr)
+        print(ff.cmd)
+        await ff.run_async()
+        await ff.wait()
     except Exception as e:
         print(e)
 
@@ -133,7 +133,7 @@ async def push_stream(name, time):
     try:
         time = int(time)
         video_name = './video/' + name + '.flv'
-        live_addr = "\"" + gl.rtmp_addr + gl.live_code + "\""
+        live_addr = gl.rtmp_addr + gl.live_code
         ff = FFmpeg (
             global_options = [
                 '-v', 'quiet'
@@ -145,7 +145,7 @@ async def push_stream(name, time):
                 ]
             },
             outputs = {
-                "" : [
+                live_addr : [
                     '-c:v', 'copy',
                     '-c:a', 'aac',
                     '-b:a', '192k',
@@ -153,8 +153,9 @@ async def push_stream(name, time):
                 ]
             }   
         )
-        print(ff.cmd + ' ' + live_addr)
-        os.system(ff.cmd + " " + live_addr)
+        print(ff.cmd)
+        await ff.run_async()
+        await ff.wait()
     except Exception as e:
         print(e)
 
