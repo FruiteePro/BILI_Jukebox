@@ -38,7 +38,7 @@ async def make_video(name):
             }
         )
         print(ff.cmd)
-        ff.run_async()
+        await ff.run_async()
         await ff.wait()
         return 1, "success"
     except Exception as e:
