@@ -79,9 +79,11 @@ async def add_music(music_name):
 async def video_composer(music_name):
     download_code = await music_downloader(music_name)
     if download_code == -1:
+        gl.download_list.remove(music_name)
         return -1
     video_compose_code, msg = await ffmpeg_cmd.make_video(music_name)
     if video_compose_code == -1:
+        gl.download_list.remove(music_name)
         print("video composer error : " + msg)
         return -1
     print("video composer success")
