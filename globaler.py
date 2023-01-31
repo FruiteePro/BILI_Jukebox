@@ -1,8 +1,12 @@
-defult_list = []
+default_list = []
 called_list = []
 download_list = []
 
 room_id = 0
-rtmp_addr = "rtmp://live-push.bilivideo.com/live-bvc/"
+rtmp_addr = ""
 live_code = ""
+
+
+def get_called_num():
+    return len(called_list)
 

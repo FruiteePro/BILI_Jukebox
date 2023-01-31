@@ -3,6 +3,7 @@ import binascii
 import json
 import random
 import string
+import logging
 from urllib import parse
 
 import utils
@@ -127,10 +128,10 @@ def music_search(song_name):
                 res_code = 1
             else:
                 res_code = -2
-                print("ERROR! Music analysis fault. Maybe the format of music is wrong.")
+                logging.error("ERROR! Music analysis fault. Maybe the format of music is wrong.")
     else:
         res_code = -1
-        print("Sorry, can not find infomation of this song.")
+        logging.warning("Sorry, can not find infomation of this song.")
 
     return res_code, res_song_url
 
@@ -141,12 +142,12 @@ def music_download(song_name):
         if code == 1:
             song_url = song_url.strip("\"")
             utils.download(song_url, song_name)
-            print("download " + song_name + " success!")
+            logging.info("download " + song_name + " success!")
             return code, song_name
         else:
             return -1, song_name
     except Exception as e:
-        print(e)
+        logging.error(e)
         return -1, e
 
 

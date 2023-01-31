@@ -1,5 +1,6 @@
 
 import utils
+import logging
 from WangyiyunMusicApi import music_download
 
 
@@ -36,6 +37,6 @@ async def music_downloader(name):
 
 
 if __name__ == "__main__":
-    print("start")
+    logging.info("start")
     #asyncio.run(room.connect())
 

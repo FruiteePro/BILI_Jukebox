@@ -1,6 +1,7 @@
 import os
 import urllib.request
 import re
+import random
 
 #音乐下载
 def download(url, name):
@@ -18,6 +19,9 @@ def get_danmuku_result(str):
         name = re.findall(r"^点歌-(.+)", str)
         print(name)
         format_name = name[0].replace(" ", "_")
+        format_name = name[0].replace(":", "_")
+        format_name = name[0].replace("\\", "_")
+        format_name = name[0].replace("/", "_")
         return 1, format_name
     else:
         return -1, "NULL"
@@ -46,3 +50,18 @@ def delete_music(name):
     music_path = './music/' + name + '.mp3'
     os.remove(video_path)
     os.remove(music_path)
+
+#删除视频文件
+def delete_video(name):
+    video_path = './video/' + name + '.flv'
+    os.remove(video_path)
+
+
+#选择图片视频
+def select_image():
+    image_video_list = []
+    for file in os.listdir("./image_video/"):
+        if file.endswith(".flv"):
+            image_video_list.append(file)
+    num = random.randint(0, len(image_video_list) - 1)
+    return image_video_list[num]
