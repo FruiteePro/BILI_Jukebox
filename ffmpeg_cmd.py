@@ -91,7 +91,7 @@ async def make_default_video(name):
                     '-t', '600',
                     '-f', 'flv',
                     '-s', '1920x1080',
-                    '-vf', 'drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'BILI-Jukebox 点歌机\n\n点歌可发送弹幕 点歌-[歌名]\nPS：不用加方括号（目前只支持网易云哦）\':x=30:y=30, drawtext=fontcolor=white:fontsize=50:fontfile=SmileySans-Oblique.tff:text=\'当前播放歌曲：\n\n待播歌曲数：\n \n接下来播放：\':x=30:y=300, drawtext=fontcolor=white:fontsize=50:fontfile=SmileySans-Oblique.tff:text=\'播放进度\: \':x=1400:y=30',
+                    '-vf', 'drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'BILI-Jukebox 点歌机\n\n点歌可发送弹幕 点歌-[歌名]\nPS：不用加方括号（目前只支持网易云哦）\':x=30:y=30, drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'当前播放歌曲：\n\n待播歌曲数：\n \n接下来播放：\':x=30:y=300, drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'播放进度\: \':x=1400:y=30',
                     '-y'
                 ]
             }
