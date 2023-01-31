@@ -10,7 +10,9 @@ from wordpicker import analysis_danmuku, music_downloader
 import utils
 import globaler as gl
 import ffmpeg_cmd
+import start
 
+start.get_default_info()
 room = live.LiveDanmaku(room_display_id=gl.room_id)
 lock = Lock()
 

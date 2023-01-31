@@ -4,12 +4,14 @@ import globaler as gl
 from WangyiyunMusicApi import music_download
 import utils
 
+from bilibili_api import live
 import zipfile
 import wget
 import asyncio
 import logging
 import yaml
 import os
+
 
 
 def get_default_info():
@@ -113,11 +115,10 @@ async def initialization():
         gl.default_list.remove(item)
     
     
-    
+ 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    get_default_info()
     asyncio.run(initialization())
     logging.info("Please start your Live.")
     sig = input("If Live is start? [y/n]")
