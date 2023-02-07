@@ -6,13 +6,17 @@ import logging
 from bilibili_api import live
 from threading import Thread, Lock
 
-from wordpicker import analysis_danmuku, music_downloader
-import utils
-import globaler as gl
-import ffmpeg_cmd
 import start
 
 start.get_default_info()
+
+import wordpicker
+import utils
+import globaler as gl
+import ffmpeg_cmd
+
+
+
 room = live.LiveDanmaku(room_display_id=gl.room_id)
 lock = Lock()
 
@@ -64,11 +68,16 @@ async def begin_live(music_name):
 #点歌循环
 @room.on('DANMU_MSG')
 async def call_list(event):
-    code, music_name = await analysis_danmuku(event)
+    with lock:
+        code, music_name, usr_info = await wordpicker.analysis_danmuku(event)
     if code == -1:
         return 0
-    gl.download_list.append(music_name)
-    task = video_composer(music_name)
+    if gl.check_music_name(music_name):
+        await wordpicker.double_music_fault(usr_info)
+        return 0
+    with lock:
+        gl.download_list.append(music_name)
+    task = video_composer(music_name, usr_info)
     asyncio.gather(task)
 
 
@@ -79,21 +88,27 @@ async def add_music(music_name):
 
 
 #音乐下载及封装
-async def video_composer(music_name):
-    download_code = await music_downloader(music_name)
+async def video_composer(music_name, usr_info):
+    download_code, real_music_name = await wordpicker.music_downloader(music_name)
     if download_code == -1:
-        gl.download_list.remove(music_name)
+        await wordpicker.download_fault(usr_info, music_name)
+        with lock:
+            gl.download_list.remove(music_name)
         return -1
-    video_compose_code, msg = await ffmpeg_cmd.make_video_2(music_name)
+    with lock:
+        await wordpicker.success_danmuku(usr_info, music_name)
+    video_compose_code, msg = await ffmpeg_cmd.make_video_2(music_name, real_music_name)
     if video_compose_code == -1:
-        gl.download_list.remove(music_name)
+        with lock:
+            gl.download_list.remove(music_name)
         print("video composer error : " + str(msg))
         return -1
     print("video composer success")
     while gl.download_list[0] != music_name:
         await asyncio.sleep(10)
     await add_music(music_name)
-    gl.download_list.pop(0)
+    with lock:
+        gl.download_list.pop(0)
     
 
 
@@ -122,7 +137,7 @@ def run_bili_loop():
 def setup():
     t1 = Thread(target=run_bili_loop, args=())
     t1.start()
-    asyncio.run(music_player())
+    #asyncio.run(music_player())
     t1.join()
 
 

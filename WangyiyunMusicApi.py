@@ -119,10 +119,12 @@ def music_search(song_name):
             d = {"ids": "[" + str(json.loads(str(item))['id']) + "]", "level": "standard", "encodeType": "",
                  "csrf_token": ""}
             d = json.dumps(d)
+            item = json.loads(item)
             param = get_final_param(d, random_param)
             song_info = get_reply(param['params'], param['encSecKey'])
             if len(song_info) > 0:
                 song_info = json.loads(song_info)
+                song_real_name = item['name']
                 song_url = json.dumps(song_info['data'][0]['url'], ensure_ascii=False)
                 res_song_url = song_url
                 res_code = 1
@@ -133,19 +135,19 @@ def music_search(song_name):
         res_code = -1
         logging.warning("Sorry, can not find infomation of this song.")
 
-    return res_code, res_song_url
+    return res_code, res_song_url, song_real_name
 
 
 def music_download(song_name):
     try:
-        code, song_url = music_search(song_name)
+        code, song_url, song_real_name = music_search(song_name)
         if code == 1:
             song_url = song_url.strip("\"")
             utils.download(song_url, song_name)
-            logging.info("download " + song_name + " success!")
+            logging.info("download " + song_real_name + " success!")
             return code, song_name
         else:
-            return -1, song_name
+            return -1, song_real_name
     except Exception as e:
         logging.error(e)
         return -1, e

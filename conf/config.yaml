@@ -4,3 +4,6 @@ default_list:
 live_code: ""
 room_id: 0
 rtmp_addr: ""
+SESSDATA: ""
+BILI_JCT: ""
+BUVID3: ""

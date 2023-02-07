@@ -20,6 +20,9 @@ def get_default_info():
         room_id = 0
         rtmp_addr = ""
         live_code = ""
+        SESSDATA = ""
+        BILI_JCT = ""
+        BUVID3 = ""
         default_list = ['2:23 AM', '七里香']
 
         if not os.path.exists("./music"):
@@ -56,16 +59,32 @@ def get_default_info():
             room_id = input("room id:")
             rtmp_addr = input("rtmp addr:")
             live_code = input("live code:")
+            SESSDATA = input("SESSDATA:")
+            BILI_JCT = input("BILI_JCT:")
+            BUVID3 = input("BUVID3:")
 
             yaml_data = {
                 "room_id": room_id,
                 "rtmp_addr": rtmp_addr,
                 "live_code": live_code,
-                "default_list": default_list
+                "default_list": default_list,
+                "SESSDATA": SESSDATA,
+                "BILI_JCT": BILI_JCT,
+                "BUVID3": BUVID3
             }
             with open(yaml_path,"w") as f:
                 yaml.safe_dump(data=yaml_data, stream=f)
             logging.info("yaml file created successfully.")
+
+            gl.room_id = room_id
+            gl.rtmp_addr = rtmp_addr
+            gl.live_code = live_code
+            gl.default_list = default_list
+            gl.SESSDATA = SESSDATA
+            gl.BILI_JCT = BILI_JCT
+            gl.BUVID3 = BUVID3
+
+            logging.info("yaml file loaded successfully")
 
         else:
             with open(yaml_path, 'r') as f:
@@ -75,6 +94,9 @@ def get_default_info():
                 gl.rtmp_addr = yaml_data["rtmp_addr"]
                 gl.live_code = yaml_data["live_code"]
                 gl.default_list = yaml_data["default_list"]
+                gl.SESSDATA = yaml_data["SESSDATA"]
+                gl.BILI_JCT = yaml_data["BILI_JCT"]
+                gl.BUVID3 = yaml_data["BUVID3"]
 
                 logging.info("yaml file loaded successfully")
 

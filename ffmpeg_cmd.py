@@ -91,7 +91,7 @@ async def make_default_video(name):
                     '-t', '600',
                     '-f', 'flv',
                     '-s', '1920x1080',
-                    '-vf', 'drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'BILI-Jukebox 点歌机\n\n点歌可发送弹幕 点歌-[歌名]\nPS：不用加方括号（目前只支持网易云哦）\':x=30:y=30, drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'当前播放歌曲：\n\n待播歌曲数：\n \n接下来播放：\':x=30:y=300, drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'播放进度\: \':x=1400:y=30',
+                    '-vf', 'drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'BILI-Jukebox 点歌机\n\n点歌可发送弹幕 点歌-[歌名]\nPS：不用加方括号（目前只支持网易云哦）\':x=30:y=30, drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'当前播放歌曲：\':x=30:y=300, drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'播放进度\: \':x=1400:y=30',
                     '-y'
                 ]
             }
@@ -120,16 +120,10 @@ async def make_video(name):
         duration = float(duration)
         mm = int(duration / 60)
         ss = int(duration % 60) + 1
-        music_num = gl.get_called_num()
-        if music_num > 0:
-            next_music = gl.called_list[0]
-        else:
-            next_music = "列表是空的哦～"
+
 
         text1 = 'drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'%{pts\:gmtime\:0\:%M\\\\\\:%S}/' + str(mm) + '\:' + str(ss) + '\':x=1600:y=35,'
-        text2 = 'drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'' + str(name) + '\':x=300:y=300,'
-        text3 = 'drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'' + str(music_num) + '\':x=260:y=405,'
-        text4 = 'drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'' + str(next_music) + '\':x=260:y=500'
+        text2 = 'drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'' + str(name) + '\':x=300:y=300'
 
 
         ff = FFmpeg (
@@ -150,7 +144,7 @@ async def make_video(name):
                     '-b:v', '5M', 
                     '-b:a', '192k',
                     '-s', '1920x1080', 
-                    '-vf', text1 + text2 + text3 + text4,
+                    '-vf', text1 + text2,
                     '-f', 'flv',
                     '-shortest', 
                     '-y'
@@ -165,7 +159,7 @@ async def make_video(name):
         return -1, e
 
 #通过替换音频来合成视频（似乎会快那么一点点
-async def make_video_2(name):
+async def make_video_2(name, real_name):
     try:
         logging.info("video generating......")
         audio_name = "./music/" + name + ".mp3"
@@ -179,16 +173,11 @@ async def make_video_2(name):
         duration = float(duration)
         mm = int(duration / 60)
         ss = int(duration % 60) + 1
-        music_num = gl.get_called_num()
-        if music_num > 0:
-            next_music = gl.called_list[0]
-        else:
-            next_music = "列表是空的哦～"
+
 
         text1 = 'drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'%{pts\:gmtime\:0\:%M\\\\\\:%S}/' + str(mm) + '\:' + str(ss) + '\':x=1600:y=35,'
-        text2 = 'drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'' + str(name) + '\':x=300:y=300,'
-        text3 = 'drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'' + str(music_num) + '\':x=260:y=405,'
-        text4 = 'drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'' + str(next_music) + '\':x=260:y=500'
+        text2 = 'drawtext=fontcolor=white:fontsize=50:fontfile=./font/SmileySans-Oblique.ttf:text=\'' + str(real_name) + '\':x=300:y=300'
+
 
 
         ff = FFmpeg (
@@ -204,7 +193,7 @@ async def make_video_2(name):
                     '-c:v', 'libx264', 
                     '-c:a', 'aac',
                     '-s', '1920x1080', 
-                    '-vf', text1 + text2 + text3 + text4,
+                    '-vf', text1 + text2,
                     '-f', 'flv',
                     '-shortest', 
                     '-y'
