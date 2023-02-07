@@ -137,7 +137,7 @@ def run_bili_loop():
 def setup():
     t1 = Thread(target=run_bili_loop, args=())
     t1.start()
-    #asyncio.run(music_player())
+    asyncio.run(music_player())
     t1.join()
 
 
