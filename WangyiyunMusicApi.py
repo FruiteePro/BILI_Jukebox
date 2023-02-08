@@ -103,6 +103,7 @@ def get_reply(params, encSecKey):
 
 def music_search(song_name):
     res_song_url = ""
+    song_real_name = "none"
     res_code = -1
     d = {"hlpretag": "<span class=\"s-fc7\">", "hlposttag": "</span>", "s": song_name, "type": "1", "offset": "0",
          "total": "true", "limit": "30", "csrf_token": ""}
@@ -135,6 +136,7 @@ def music_search(song_name):
         res_code = -1
         logging.warning("Sorry, can not find infomation of this song.")
 
+    
     return res_code, res_song_url, song_real_name
 
 
@@ -145,7 +147,7 @@ def music_download(song_name):
             song_url = song_url.strip("\"")
             utils.download(song_url, song_name)
             logging.info("download " + song_real_name + " success!")
-            return code, song_name
+            return code, song_real_name
         else:
             return -1, song_real_name
     except Exception as e:
@@ -156,4 +158,5 @@ def music_download(song_name):
         
 if __name__ == '__main__':
     song_name = input('请输入歌曲名称：')
-    music_download(song_name)
+    code, real_song = music_download(song_name)
+    print(real_song)
