@@ -127,7 +127,7 @@ async def initialization():
                 code_num, mess = music_download(music)
 
             if code_num == 1:
-                code_num, _ = await ffmpeg_cmd.make_video_2(music)
+                code_num, _ = await ffmpeg_cmd.make_video_2(music, music)
             
             if code_num == -1:
                 logging.warning("music {} initialize failed".format(music))
