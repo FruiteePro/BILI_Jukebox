@@ -5,6 +5,7 @@ import os
 import logging
 from bilibili_api import live
 from threading import Thread, Lock
+import time
 
 import start
 
@@ -19,7 +20,7 @@ import ffmpeg_cmd
 
 room = live.LiveDanmaku(room_display_id=gl.room_id)
 lock = Lock()
-
+time_last_pop = time.time()
 
 #主播放循环
 async def music_player():
@@ -73,8 +74,10 @@ async def call_list(event):
     if code == -1:
         return 0
     if gl.check_music_name(music_name):
-        await wordpicker.double_music_fault(usr_info)
-        return 0
+        with lock:
+            await wordpicker.double_music_fault(usr_info)
+            gl.clean_fault_music(music_name)
+            return 0
     with lock:
         gl.download_list.append(music_name)
     task = video_composer(music_name, usr_info)
@@ -93,19 +96,27 @@ async def video_composer(music_name, usr_info):
     if download_code == -1:
         await wordpicker.download_fault(usr_info, music_name)
         with lock:
-            gl.download_list.remove(music_name)
+            gl.clean_fault_music(music_name)
         return -1
     with lock:
         await wordpicker.success_danmuku(usr_info, music_name)
     video_compose_code, msg = await ffmpeg_cmd.make_video_2(music_name, real_music_name)
     if video_compose_code == -1:
         with lock:
-            gl.download_list.remove(music_name)
+            gl.clean_fault_music(music_name)
         print("video composer error : " + str(msg))
         return -1
     print("video composer success")
+    
+    count = 0
     while gl.download_list[0] != music_name:
         await asyncio.sleep(10)
+        if gl.download_list[1] == music_name:
+            count += 1
+            if count == 30:
+                pop_fist_music()
+                count = 0
+
     await add_music(music_name)
     with lock:
         gl.download_list.pop(0)
@@ -123,6 +134,14 @@ def choose_music():
         with lock:
             res = gl.called_list[0];
             return 1, res
+
+#排除排队bug
+def pop_fist_music():
+    time_curr = time.time()
+    if time_curr - time_last_pop > 300:
+        with lock:
+            gl.download_list.pop(0)
+            time_last_pop = time_curr
 
 
 async def tasks():

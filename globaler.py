@@ -20,3 +20,10 @@ def check_music_name(name):
     if (name in called_list) or (name in download_list):
         return True
     return False
+
+def clean_fault_music(name):
+    if name in called_list:
+        called_list.remove(name)
+    if name in download_list:
+        download_list.remove(name)
+

@@ -39,44 +39,59 @@ async def analysis_danmuku(event):
 
 #判断冷却时间
 async def check_valid(usr_info, music_name):
-    uid = usr_info['uid']
-    usr_name = usr_info['usr_name']
-    time_curr = time.time()
-    if uid in gl.usr_time:
-        if time_curr - gl.usr_time[uid] < 30:
-            text = usr_name + "的冷却还有" + str(int(30 - time_curr + gl.usr_time[uid])) + "秒哦=v="
-            danmuku = Danmaku(text=text)
-            await room.send_danmaku(danmuku)
-            return False
-    return True
+    try:
+        uid = usr_info['uid']
+        usr_name = usr_info['usr_name']
+        time_curr = time.time()
+        if uid in gl.usr_time:
+            if time_curr - gl.usr_time[uid] < 30:
+                text = usr_name + "的冷却还有" + str(int(30 - time_curr + gl.usr_time[uid])) + "秒哦=v="
+                danmuku = Danmaku(text=text)
+                await room.send_danmaku(danmuku)
+                return 1, False
+        return 1, True
+    except Exception as e:
+        return -1, e
 
 
 #点歌成功弹幕
 async def success_danmuku(usr_info, music_name):
-    uid = usr_info['uid']
-    usr_name = usr_info['usr_name']
-    time_curr = time.time()
-    text = "歌曲" + music_name + "在下载啦～"
-    danmuku = Danmaku(text=text)
-    await room.send_danmaku(danmuku)
-    gl.usr_time[uid] = time_curr
+    try:
+        uid = usr_info['uid']
+        usr_name = usr_info['usr_name']
+        time_curr = time.time()
+        text = music_name + "在下载啦～"
+        danmuku = Danmaku(text=text)
+        await room.send_danmaku(danmuku)
+        gl.usr_time[uid] = time_curr
+        return 1, "success"
+    except Exception as e:
+        return -1, e
 
 
 #重复点歌失败
 async def double_music_fault(usr_info):
-    uid = usr_info['uid']
-    usr_name = usr_info['usr_name']
-    text = usr_name + "点的歌曲已经在列表中了OvO"
-    danmuku = Danmaku(text=text)
-    await room.send_danmaku(danmuku)
+    try:
+        uid = usr_info['uid']
+        usr_name = usr_info['usr_name']
+        text = "已经在列表中了OvO"
+        danmuku = Danmaku(text=text)
+        await room.send_danmaku(danmuku)
+        return 1, "success"
+    except Exception as e:
+        return -1, e
 
 #下载失败弹幕
 async def download_fault(usr_info, music_name):
-    uid = usr_info['uid']
-    usr_name = usr_info['usr_name']
-    text = "歌曲" + music_name + "下载失败了T_T"
-    danmuku = Danmaku(text=text)
-    await room.send_danmaku(danmuku)
+    try:
+        uid = usr_info['uid']
+        usr_name = usr_info['usr_name']
+        text = music_name + "下载失败了T_T"
+        danmuku = Danmaku(text=text)
+        await room.send_danmaku(danmuku)
+        return 1, "success"
+    except Exception as e:
+        return -1, e
 
 #循环弹幕
 
