@@ -6,8 +6,11 @@ A jukebox on bilibili live
 ## 运行环境：
 
 ffmpeg
+
 python 3.10.5
+
 ffmpy3 0.2.4
+
 bilibili_api 14.2.0
 
 还有什么别的可能忘了，报错再装也行。
@@ -35,11 +38,17 @@ python ./start.py
 ## 特别鸣谢：
 
 没这两个爹会死：
+
 	[Bilibili_api](https://bili.moyu.moe/#/)
+
 	[ffmpy](https://ffmpy-zh.readthedocs.io/zh/latest/)
+
 还有有空帮我找bug的朋友们：
+
 	BLHSSSG
+
 	FireV0dka
+    
 	一只罗白
 
 ## 后记：
