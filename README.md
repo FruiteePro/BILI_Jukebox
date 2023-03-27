@@ -39,17 +39,17 @@ python ./start.py
 
 没这两个爹会死：
 
-	[Bilibili_api](https://bili.moyu.moe/#/)
+- [Bilibili_api](https://bili.moyu.moe/#/)
 
-	[ffmpy](https://ffmpy-zh.readthedocs.io/zh/latest/)
+- [ffmpy](https://ffmpy-zh.readthedocs.io/zh/latest/)
 
 还有有空帮我找bug的朋友们：
 
-	BLHSSSG
+- BLHSSSG
 
-	FireV0dka
-    
-	一只罗白
+- FireV0dka
+
+- 一只罗白
 
 ## 后记：
 
